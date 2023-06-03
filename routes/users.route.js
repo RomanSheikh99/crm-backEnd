@@ -1,9 +1,17 @@
 const exp = require('express');
-const { createUser } = require('../controlers/users.controler');
-// const getAllUser = require('../controlers/users.controler');
+const {
+    createUser,
+    getAllUsers,
+    getOneUser,
+    updateUser,
+    deleteUser
+} = require('../controlers/users.controler');
 const router = exp.Router();
 
-// router.get('/',getAllUser)
-router.post('/',createUser)
+router.post('/', createUser)
+router.get('/', getAllUsers)
+router.get('/:id', getOneUser)
+router.patch('/:id', updateUser)
+router.delete('/:id', deleteUser)
 
 module.exports = router;

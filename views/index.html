@@ -119,13 +119,25 @@
                   data() {
                     return {
                       message: 'welcome to crm server',
-                      local: 'http://localhost:4000',
+                      local: 'https://crm-9w23.onrender.com',
                       data : [
     {
-        title: 'register',
-        id: 3,
+        title: 'Create A User',
+        id: 1,
         api: '/api/user',
         method: 'post'
+    },
+    {
+        title: 'Get All User',
+        id: 2,
+        api: '/api/user',
+        method: 'get'
+    },
+    {
+        title: 'Get One User',
+        id: 3,
+        api: '/api/user/:id',
+        method: 'get'
     },
 ]
                     }
