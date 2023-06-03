@@ -1,18 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crm Server</title>
-    <style>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Crm Server</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+        <style>
         h1{
             text-align: center;
             font-size: 60px;
+            text-transform: capitalize;
+        }
+        main{
+            width: 70%;
+            margin: 20px auto;
+            border: 12px solid #777;
         }
     </style>
-</head>
-<body>
-    <h1>Crm Server Is Running</h1>
-</body>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    </head>
+    <body id="app">
+        <header>
+            <h1>{{message}}</h1>
+        </header>
+        <main>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div v-for="api in data" class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                        <button class="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne"
+                            aria-expanded="false"
+                            aria-controls="flush-collapseOne">
+                            <h3>{{api.title}} <span class="badge bg-secondary">{{api.method}}</span></h3>
+                        </button>
+                    </h2>
+                    <div id="flush-collapseOne"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="flush-headingOne"
+                        data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body"><ul
+                                class="nav nav-pills nav-fill">
+                                <li class="nav-item">
+                                    <h3>{{local + api.api}}</h3>
+                                </li>
+                                <li class="nav-item">
+                                    <button
+                                        type="button"
+                                        class="btn btn-light"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#copedModal">
+                                        <h3>Copy API</h3>
+                                    </button>
+                                    <div class="modal fade" id="copedModal"
+                                        tabindex="-1"
+                                        aria-labelledby="exampleModalLabel"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content"
+                                                style="max-width: fit-content;">
+                                                <div class="modal-header"
+                                                    style="padding: 0;">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        style="display: none;">
+                                                        <symbol
+                                                            id="check-circle-fill"
+                                                            fill="currentColor"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                        </symbol>
+                                                    </svg>
+                                                    <div
+                                                        class="alert alert-success d-flex align-items-center"
+                                                        role="alert"
+                                                        style="margin: 0;">
+                                                        <svg
+                                                            class="bi flex-shrink-0 me-2"
+                                                            width="24"
+                                                            height="24"
+                                                            role="img"
+                                                            aria-label="Success:"><use
+                                                                xlink:href="#check-circle-fill" /></svg>
+                                                        <div>
+                                                            API Copied
+                                                            Successfully
+                                                            <button
+                                                                type="button"
+                                                                class="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                    </div> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            {{data}}
+        </footer>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+                const { createApp } = Vue
+              
+                createApp({
+                  data() {
+                    return {
+                      message: 'welcome to crm server',
+                      local: 'http://localhost:4000',
+                      data : [
+    {
+        title: 'register',
+        id: 3,
+        api: '/api/user',
+        method: 'post'
+    },
+]
+                    }
+                  }
+                }).mount('#app')
+        </script>
+
+    </body>
 </html>

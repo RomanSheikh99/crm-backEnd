@@ -10,8 +10,16 @@ const userSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    age: {
-        type: Number,
+    email: {
+        type: String,
+        require: true
+    },
+    role: {
+        type: String,
+        require: true
+    },
+    passward: {
+        type: String,
         require: true
     },
     createdOn: {
