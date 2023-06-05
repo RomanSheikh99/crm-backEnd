@@ -4,6 +4,17 @@ const {
 const User = require("../models/user.model")
 
 
+const login = async (req,res)=> {
+  try {
+    const user = await User.findOne({ email: req.body.email })
+    if(user && user.password == req.body.password){
+      res.send("login succesfully");
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}
+
 const getAllUsers = async (req, res) => {
     try {
       const users = await User.find();
@@ -61,5 +72,5 @@ const updateUser = async (req, res) => {
   
 
 module.exports = {
-    createUser, getAllUsers, getOneUser, updateUser, deleteUser
+    createUser, getAllUsers, getOneUser, updateUser, deleteUser , login
 };

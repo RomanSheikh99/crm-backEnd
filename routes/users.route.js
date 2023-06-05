@@ -4,7 +4,8 @@ const {
     getAllUsers,
     getOneUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    login
 } = require('../controlers/users.controler');
 const router = exp.Router();
 
@@ -13,5 +14,6 @@ router.get('/', getAllUsers)
 router.get('/:id', getOneUser)
 router.patch('/:id', updateUser)
 router.delete('/:id', deleteUser)
+router.post('/login', login)
 
 module.exports = router;
