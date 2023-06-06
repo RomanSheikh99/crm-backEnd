@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    passward: {
+    pass: {
         type: String,
         require: true
     },

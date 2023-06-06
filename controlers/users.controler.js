@@ -1,17 +1,26 @@
 const {
     v4: uuidv4
 } = require('uuid')
+const bcrypt = require('bcrypt');
+
 const User = require("../models/user.model")
 
 
 const login = async (req,res)=> {
   try {
-    const user = await User.findOne({ email: req.body.email })
-    if(user && user.password == req.body.password){
-      res.send("login succesfully");
+    // Check if user exists
+    const user = await User.findOne({ email: req.body.email});
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email' });
     }
+    // Check password
+    const passwordMatch = await bcrypt.compare(req.body.pass, user.pass);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
+    res.status(200).json(user);
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ message: 'An error occurred' });
   }
 }
 
@@ -40,7 +49,7 @@ const createUser = async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             role: req.body.role,
-            password: req.body.password,
+            pass: await bcrypt.hash(req.body.pass, 10)
         })
         await newUser.save();
         res.status(200).json(newUser);
