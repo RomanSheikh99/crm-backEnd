@@ -6,7 +6,19 @@ const bodyParser = require('body-parser');
 const leads = express();
 
 const {
-    createNewLead, importLeads, getAllLeads, getOneLead, updateLead, addToTrashLead, deleteLead
+    createNewLead,
+    importLeads,
+    getAllLeads,
+    getOneLead,
+    updateLead,
+    addToTrashLead,
+    deleteLead,
+    getFreshLeads,
+    getFolloUpLeads,
+    getAssignToLeads,
+    getTrashLeads,
+    searchLeads,
+    searchFreshLeads
 } = require('../controlers/leads.controler');
 
 
@@ -18,12 +30,12 @@ leads.use(bodyParser.urlencoded({
 leads.use(express.static(path.resolve(__dirname, "public")));
 
 const storage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, './public/uploads')
-        },
-        filename: (req, file, cb) => {
-            cb(null, file.originalname)
-        }
+    destination: (req, file, cb) => {
+        cb(null, './public/uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname)
+    }
 })
 
 const upload = multer({
@@ -32,12 +44,20 @@ const upload = multer({
 
 leads.post('/import', upload.single('file'), importLeads);
 
-
 leads.post('/', createNewLead)
-leads.get('/', getAllLeads)
+
+leads.get('/allLeads', getAllLeads)
+leads.get('/freshLeads', getFreshLeads)
+leads.get('/trashLeads', getTrashLeads)
+leads.get('/followUp/:id', getFolloUpLeads)
+leads.get('/assignLeads/:id', getAssignToLeads)
+
 leads.get('/:id', getOneLead)
 leads.patch('/:id', updateLead)
-leads.patch('/:id', addToTrashLead)
+leads.patch('/addToTrash/:id', addToTrashLead)
 leads.delete('/:id', deleteLead)
+
+leads.get('/allLeads/:query', searchLeads)
+leads.get('/freshLeads/:query', searchFreshLeads)
 
 module.exports = leads;

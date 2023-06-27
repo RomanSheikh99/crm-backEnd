@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/user', userRouter)
+app.use('/api/users', userRouter)
 app.use('/api/leads', leadRouter)
 
 app.get('/', (req, res) => {

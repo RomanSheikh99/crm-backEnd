@@ -64,6 +64,14 @@ const leadsSchema = mongoose.Schema({
         type: String,
         default: null
     },
+    assignToName: {
+        type: String,
+        default: null
+    },
+    assignToID: {
+        type: String,
+        default: null
+    },
     status: {
         type: String,
         default: null

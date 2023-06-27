@@ -14,7 +14,14 @@ const userSchema = mongoose.Schema({
         type: String,
         require: true
     },
+    phone: {
+        type: String,
+    },
     role: {
+        type: String,
+        default: "marketer",
+    },
+    showPass: {
         type: String,
         require: true
     },
