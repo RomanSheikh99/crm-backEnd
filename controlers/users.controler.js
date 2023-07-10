@@ -95,6 +95,11 @@ const updateUser = async (req, res) => {
     }
   };
 
+  const newUsers = async (req,res) => {
+    console.log("first")
+  }
+
+
 module.exports = {
-    createUser, getAllUsers, getOneUser, updateUser, deleteUser , login , searchUsers
+    createUser, getAllUsers, getOneUser, updateUser, deleteUser , login , searchUsers,newUsers
 };

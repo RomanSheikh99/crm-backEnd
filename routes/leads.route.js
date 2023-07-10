@@ -5,6 +5,10 @@ const bodyParser = require('body-parser');
 
 const leads = express();
 
+const searchRouter = require('./search.route');
+const filterRouter = require('./filter.route');
+
+
 const {
     createNewLead,
     importLeads,
@@ -17,9 +21,11 @@ const {
     getFolloUpLeads,
     getAssignToLeads,
     getTrashLeads,
-    searchLeads,
-    searchFreshLeads
+    getFavLeads,
+    assignTo,
+    allLeads,
 } = require('../controlers/leads.controler');
+const Leads = require('../models/leads.model');
 
 
 
@@ -42,22 +48,27 @@ const upload = multer({
     storage: storage
 });
 
-leads.post('/import', upload.single('file'), importLeads);
 
+leads.use(searchRouter);
+leads.use(filterRouter);
+
+leads.post('/import', upload.single('file'), importLeads);
 leads.post('/', createNewLead)
 
+leads.get('/', allLeads)
 leads.get('/allLeads', getAllLeads)
 leads.get('/freshLeads', getFreshLeads)
 leads.get('/trashLeads', getTrashLeads)
 leads.get('/followUp/:id', getFolloUpLeads)
 leads.get('/assignLeads/:id', getAssignToLeads)
+leads.get('/favLeads/:id', getFavLeads)
 
 leads.get('/:id', getOneLead)
 leads.patch('/:id', updateLead)
-leads.patch('/addToTrash/:id', addToTrashLead)
 leads.delete('/:id', deleteLead)
+leads.patch('/addToTrash/:id', addToTrashLead)
+leads.patch('/assignTo/:id', assignTo)
 
-leads.get('/allLeads/:query', searchLeads)
-leads.get('/freshLeads/:query', searchFreshLeads)
+
 
 module.exports = leads;
