@@ -24,6 +24,13 @@ const {
     getFavLeads,
     assignTo,
     allLeads,
+    setPosibility,
+    setStatus,
+    setNextFollowUp,
+    setFollower,
+    setFavOf,
+    addRemarks,
+    checkValue,
 } = require('../controlers/leads.controler');
 const Leads = require('../models/leads.model');
 
@@ -54,6 +61,7 @@ leads.use(filterRouter);
 
 leads.post('/import', upload.single('file'), importLeads);
 leads.post('/', createNewLead)
+leads.get('/checkValue', checkValue)
 
 leads.get('/', allLeads)
 leads.get('/allLeads', getAllLeads)
@@ -68,7 +76,12 @@ leads.patch('/:id', updateLead)
 leads.delete('/:id', deleteLead)
 leads.patch('/addToTrash/:id', addToTrashLead)
 leads.patch('/assignTo/:id', assignTo)
-
+leads.patch('/setStatus/:id', setStatus)
+leads.patch('/setPosibility/:id', setPosibility)
+leads.patch('/setNextFollowUp/:id', setNextFollowUp)
+leads.patch('/setFollower/:id', setFollower)
+leads.patch('/setFavOf/:id', setFavOf)
+leads.patch('/addRemarks/:id', addRemarks)
 
 
 module.exports = leads;

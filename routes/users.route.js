@@ -7,9 +7,11 @@ const {
     deleteUser,
     login,
     searchUsers,
-    newUsers
+    addRecords
 } = require('../controlers/users.controler');
 const router = exp.Router();
+
+router.patch('/addRecords', addRecords)
 
 router.post('/', createUser)
 router.get('/', getAllUsers)
@@ -18,6 +20,8 @@ router.patch('/:id', updateUser)
 router.delete('/:id', deleteUser)
 router.post('/login', login)
 router.get('/search/:query', searchUsers)
-router.get('/new', newUsers)
+
+
+
 
 module.exports = router;

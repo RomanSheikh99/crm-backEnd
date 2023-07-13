@@ -27,7 +27,6 @@ const filterLeads = async (req, res) => {
   if (possibility) {
     filter.possibility = possibility;
   }
-  console.log(filter)
   try {
     const leads = await Leads.find(filter);
     res.status(200).json(leads.reverse());

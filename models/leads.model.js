@@ -72,6 +72,10 @@ const leadsSchema = mongoose.Schema({
         type: String,
         default: null
     },
+    favOf: {
+        type: String,
+        default: null
+    },
     status: {
         type: String,
         default: null
@@ -88,6 +92,16 @@ const leadsSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    remarks: [{
+        status: String,
+        possibility: String,
+        nextPoke: String,
+        follower: String,
+        followerId: String,
+        desc: String,
+        id: String,
+        date: Date
+      }],
     createdOn: {
         type: Date,
         default: Date.now
