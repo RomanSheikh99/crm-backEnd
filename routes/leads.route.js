@@ -31,6 +31,7 @@ const {
     setFavOf,
     addRemarks,
     checkValue,
+    deleteRemark,
 } = require('../controlers/leads.controler');
 const Leads = require('../models/leads.model');
 
@@ -82,6 +83,7 @@ leads.patch('/setNextFollowUp/:id', setNextFollowUp)
 leads.patch('/setFollower/:id', setFollower)
 leads.patch('/setFavOf/:id', setFavOf)
 leads.patch('/addRemarks/:id', addRemarks)
+leads.patch('/deleteRemark/:id', deleteRemark)
 
 
 module.exports = leads;

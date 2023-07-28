@@ -102,6 +102,10 @@ const leadsSchema = mongoose.Schema({
         id: String,
         date: Date
       }],
+      updated: {
+        type: Date,
+        default: Date.now
+    },
     createdOn: {
         type: Date,
         default: Date.now

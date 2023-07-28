@@ -30,24 +30,22 @@ const userSchema = mongoose.Schema({
         require: true
     },
     quarterlyTarget: {
-        newCall: {type: Number, default: 40},
-        highLead: {type: Number, default: 5},
-        newTest: {type: Number, default: 12},
-        newFil: {type: Number, default: 3},
+        newCall: {type: Number, default: 0},
+        highLead: {type: Number, default: 0},
+        newTest: {type: Number, default: 0},
     },
     monthlyTarget: {
-        newCall: {type: Number, default: 40},
-        highLead: {type: Number, default: 5},
-        newTest: {type: Number, default: 12},
-        newFil: {type: Number, default: 3},
+        newCall: {type: Number, default: 0},
+        highLead: {type: Number, default: 0},
+        newTest: {type: Number, default: 0},
     },
+    dailyCallTarget: {type: Number, default: 0},
     quarter: [{
         title: String,
         target: {
             newCall: {type: Number, default: 0},
             highLead: {type: Number, default: 0},
             newTest: {type: Number, default: 0},
-            newFil: {type: Number, default: 0},
         },
         bit:[{
             status: String,
@@ -60,8 +58,17 @@ const userSchema = mongoose.Schema({
             newCall: {type: Number, default: 0},
             highLead: {type: Number, default: 0},
             newTest: {type: Number, default: 0},
-            newFil: {type: Number, default: 0},
         },
+        bit:[{
+            status: String,
+            possibility: String,
+          }]
+      }],
+    daily: [{
+        title: String,
+        callTarget: {type: Number, default: 0},
+        firstLogin: String,
+        lastUpdate: String,
         bit:[{
             status: String,
             possibility: String,

@@ -4,6 +4,7 @@ const {
 const bcrypt = require('bcrypt');
 
 const User = require("../models/user.model");
+const Leads = require("../models/leads.model");
 const moment = require('moment/moment');
 
 
@@ -69,7 +70,7 @@ const createUser = async (req, res) => {
     await newUser.save();
     res.status(200).json(newUser);
   } catch (error) {
-    console.log(error)
+    res.status(501).json(error);
   }
 }
 
@@ -88,8 +89,32 @@ const updateUser = async (req, res) => {
   }
 };
 
+
+const setTarget = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      id: req.params.id
+    });
+    user.quarterlyTarget = req.body.quarterlyTarget;
+    user.monthlyTarget = req.body.monthlyTarget;
+    user.dailyCallTarget = req.body.dailyCallTarget;
+    await user.save();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 const deleteUser = async (req, res) => {
   try {
+    const followLeads = await Leads.find({followerID: req.params.id})
+    if(followLeads){
+      followLeads.map(lead=>{
+        lead.followerName = null;
+        lead.followerID = null;
+        lead.save();
+      })
+    }
     await User.deleteOne({
       id: req.params.id
     });
@@ -109,9 +134,6 @@ const calculateYearQuarter = (dateString) => {
   return `${year}_Q${quarter} `;
 };
 
-// Example usage
-// const result = calculateYearQuarter(moment().startOf('day'));
-// console.log(result); // Output: Q3 2023
 
 
 const addRecords = async (req, res) => {
@@ -122,6 +144,7 @@ const addRecords = async (req, res) => {
   } = req.body;
   const quarterTitle = calculateYearQuarter(moment().startOf('day'));
   const monthTitle = moment().format('MMM YYYY');
+  const dailyTitle = moment().format("DD MMM YYYY");
   try {
     const user = await User.findOne({
       id: followerId
@@ -153,10 +176,27 @@ const addRecords = async (req, res) => {
       })
     }
     else if(!month) {
-      
       user.month.push({
         title: monthTitle,
         target: user.monthlyTarget,
+        bit:[{
+          status: status,
+          possibility: possibility,
+        }]
+      })
+    }
+    const daily = user.daily.find((day) => day.title == dailyTitle)
+    if(daily?.title){
+      daily.callTarget = user.dailyCallTarget
+      daily.bit.push({
+        status: status,
+        possibility: possibility,
+      })
+    }
+    else if(!daily) {
+      user.daily.push({
+        title: dailyTitle,
+        target: user.dailyCallTarget,
         bit:[{
           status: status,
           possibility: possibility,
@@ -167,9 +207,37 @@ const addRecords = async (req, res) => {
     await user.save();
     res.status(200).json(user);
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       error: 'An error occurred while performing the search.'
+    });
+  }
+};
+
+const addLoginUpdate = async (req, res) => {
+  const id = req.params.id;
+  const date = new Date();
+  const dailyTitle = moment(date).format("DD MMM YYYY");
+  try {
+    const user = await User.findOne({ id: id});
+   
+    const daily = user.daily.find((day) => day.title == dailyTitle)
+    if(daily?.title){
+      daily.lastUpdate = moment(date).format('hh:mm A');
+    }
+    else if(!daily) {
+      user.daily.push({
+        title: dailyTitle,
+        target: user.dailyCallTarget,
+        firstLogin: moment(date).format('hh:mm A'),
+        lastUpdate: moment(date).format('hh:mm A'),
+      })
+    }
+
+    await user.save();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({
+      error: 'An error occurred'
     });
   }
 };
@@ -225,5 +293,7 @@ module.exports = {
   deleteUser,
   login,
   searchUsers,
-  addRecords
+  addRecords,
+  addLoginUpdate,
+  setTarget
 };

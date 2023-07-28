@@ -40,7 +40,6 @@ const createNewLead = async (req, res) => {
     const lastLead = await Leads.findOne().sort({ _id: -1 });
     const data = req.body;
     data.id = uuidv4();
-    console.log(Number(lastLead.leadsNo) + 1)
     data.leadsNo = lastLead ? Number(lastLead.leadsNo) + 1 : 1;
     const newLead = new Leads(data)
     await newLead.save();
@@ -183,6 +182,8 @@ const assignTo = async (req, res) => {
     const lead = await Leads.findOne({
       id: req.params.id
     });
+    lead.followerID = null;
+    lead.followerName = null;
     lead.assignToName = req.body.name;
     lead.assignToID = req.body.id;
     await lead.save();
@@ -267,7 +268,22 @@ const addRemarks = async (req, res) => {
     const remark = req.body;
     remark.id = uuidv4();
     remark.date = Date.now();
-    lead.remarks.push(remark)
+    lead.remarks.unshift(remark)
+    lead.updated = Date.now();
+    await lead.save();
+    res.status(200).json(lead);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+const deleteRemark = async (req, res) => {
+  try {
+    const lead = await Leads.findOne({
+      id: req.params.id
+    });
+    const newRemarks = lead.remarks.filter(remark=> remark.id != req.body.id);
+    lead.remarks = newRemarks;
     await lead.save();
     res.status(200).json(lead);
   } catch (error) {
@@ -296,7 +312,6 @@ const checkValue = async (req, res) => {
 
   try {
     const lead = await Leads.findOne(filter);
-    console.log(lead)
     res.status(200).json(lead);
   } catch (error) {
     res.status(500).send(error.message);
@@ -331,4 +346,5 @@ module.exports = {
   setFavOf,
   addRemarks,
   checkValue,
+  deleteRemark
 };
