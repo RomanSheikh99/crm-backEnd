@@ -22,7 +22,6 @@ const leadsSchema = mongoose.Schema({
     },
     category: {
         type: String,
-        default: null
     },
     country: {
         type: String,

@@ -21,6 +21,7 @@ const importLeads = async (req, res) => {
     importedLeads.map(lead => {
       lead.id = uuidv4();
       lead.leadsNo = SL + 1;
+      lead.category = "VFX/3D/2D/CGI";
       leads.push(lead)
       SL = SL + 1;
     })
@@ -33,6 +34,19 @@ const importLeads = async (req, res) => {
     });
   }
 }
+
+
+const deleteAll = async (req, res) => {
+  try {
+    await Leads.deleteMany({});
+    res.status(200).json({
+      message: "All Leads Deleted"
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 
 
 const createNewLead = async (req, res) => {
@@ -346,5 +360,6 @@ module.exports = {
   setFavOf,
   addRemarks,
   checkValue,
-  deleteRemark
+  deleteRemark,
+  deleteAll
 };

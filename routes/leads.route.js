@@ -32,6 +32,7 @@ const {
     addRemarks,
     checkValue,
     deleteRemark,
+    deleteAll,
 } = require('../controlers/leads.controler');
 const Leads = require('../models/leads.model');
 
@@ -75,6 +76,7 @@ leads.get('/favLeads/:id', getFavLeads)
 leads.get('/:id', getOneLead)
 leads.patch('/:id', updateLead)
 leads.delete('/:id', deleteLead)
+leads.delete('/delete/allLeads', deleteAll)
 leads.patch('/addToTrash/:id', addToTrashLead)
 leads.patch('/assignTo/:id', assignTo)
 leads.patch('/setStatus/:id', setStatus)
