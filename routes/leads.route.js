@@ -33,6 +33,7 @@ const {
     checkValue,
     deleteRemark,
     deleteAll,
+    getOneLeadByLeadsNo,
 } = require('../controlers/leads.controler');
 const Leads = require('../models/leads.model');
 
@@ -74,6 +75,7 @@ leads.get('/assignLeads/:id', getAssignToLeads)
 leads.get('/favLeads/:id', getFavLeads)
 
 leads.get('/:id', getOneLead)
+leads.get('/getOneLeadByLeadsNo/:id', getOneLeadByLeadsNo)
 leads.patch('/:id', updateLead)
 leads.delete('/:id', deleteLead)
 leads.delete('/delete/allLeads', deleteAll)

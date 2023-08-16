@@ -85,7 +85,7 @@ const searchLeads = async (req, res) => {
                     }
                 },
             ]
-        }).skip(skipCount).limit(pageSize);
+        }).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
         res.status(200).json({ data: searchResults, totalCount: totalCount});
     } catch (error) {
         res.status(500).json({
@@ -183,7 +183,7 @@ const searchFavLeads = async (req, res) => {
                     }
                 },
             ]
-        }).skip(skipCount).limit(pageSize);
+        }).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
         res.status(200).json({ data: searchResults, totalCount: totalCount});
     } catch (error) {
         res.status(500).json({
@@ -278,7 +278,7 @@ const searchAssignToLeads = async (req, res) => {
                     }
                 },
             ]
-        }).skip(skipCount).limit(pageSize);
+        }).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
         res.status(200).json({ data: searchResults, totalCount: totalCount});
     } catch (error) {
         res.status(500).json({
@@ -374,7 +374,7 @@ const searchFolloUpLeads  = async (req, res) => {
                     }
                 },
             ]
-        }).skip(skipCount).limit(pageSize);
+        }).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
         res.status(200).json({ data: searchResults, totalCount: totalCount});
     } catch (error) {
         res.status(500).json({
@@ -474,7 +474,7 @@ const searchFreshLeads = async (req, res) => {
                     }
                 },
             ]
-        }).skip(skipCount).limit(pageSize);
+        }).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
         res.status(200).json({ data: searchResults, totalCount: totalCount});
     } catch (error) {
         res.status(500).json({
@@ -571,7 +571,7 @@ const searchTrashLeads = async (req, res) => {
                     }
                 },
             ]
-        }).skip(skipCount).limit(pageSize);
+        }).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
         res.status(200).json({ data: searchResults, totalCount: totalCount});
     } catch (error) {
         res.status(500).json({

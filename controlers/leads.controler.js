@@ -51,12 +51,15 @@ const deleteAll = async (req, res) => {
 
 const createNewLead = async (req, res) => {
   try {
-    const lastLead = await Leads.findOne().sort({ _id: -1 });
+    const count = await Leads.countDocuments();
     const data = req.body;
     data.id = uuidv4();
-    data.leadsNo = lastLead ? Number(lastLead.leadsNo) + 1 : 1;
+    data.leadsNo = count + 1;
     const newLead = new Leads(data)
-    await newLead.save();
+    await newLead.save({
+      ordered: true,
+      position: 0
+    });
     res.status(200).json(newLead);
   } catch (error) {
     res.status(500).json({
@@ -81,7 +84,7 @@ const getAllLeads = async (req, res) => {
   try {
     const totalCount = await Leads.countDocuments({trash: false});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: false}).skip(skipCount).limit(pageSize);
+    const leads = await Leads.find({trash: false}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
     res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
@@ -95,7 +98,7 @@ const getTrashLeads = async (req, res) => {
   try {
      const totalCount = await Leads.countDocuments({trash: true});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: true}).skip(skipCount).limit(pageSize);
+    const leads = await Leads.find({trash: true}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
     res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
@@ -109,7 +112,7 @@ const getFreshLeads = async (req, res) => {
   try {
      const totalCount = await Leads.countDocuments({trash: false , followerID: null, assignToID: null});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: false , followerID: null, assignToID: null}).skip(skipCount).limit(pageSize);
+    const leads = await Leads.find({trash: false , followerID: null, assignToID: null}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
     res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
@@ -123,7 +126,7 @@ const getFolloUpLeads = async (req, res) => {
   try {
      const totalCount = await Leads.countDocuments({trash: false , followerID: req.params.id});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: false , followerID: req.params.id}).skip(skipCount).limit(pageSize);
+    const leads = await Leads.find({trash: false , followerID: req.params.id}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
     res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
@@ -137,7 +140,7 @@ const getAssignToLeads = async (req, res) => {
   try {
      const totalCount = await Leads.countDocuments({trash: false , assignToID: req.params.id});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: false , assignToID: req.params.id}).skip(skipCount).limit(pageSize);
+    const leads = await Leads.find({trash: false , assignToID: req.params.id}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
     res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
@@ -150,17 +153,27 @@ const getFavLeads = async (req, res) => {
   try {
     const totalCount = await Leads.countDocuments({trash: false , favOf: req.params.id});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: false , favOf: req.params.id}).skip(skipCount).limit(pageSize);
+    const leads = await Leads.find({trash: false , favOf: req.params.id}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
     res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
   }
 };
 
-const getOneLead = async (req, res) => {
+const getOneLeadByLeadsNo = async (req, res) => {
   try {
     const lead = await Leads.findOne({
       leadsNo: req.params.id
+    });
+    res.status(200).json(lead);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}
+const getOneLead = async (req, res) => {
+  try {
+    const lead = await Leads.findOne({
+      id: req.params.id
     });
     res.status(200).json(lead);
   } catch (error) {
@@ -385,5 +398,6 @@ module.exports = {
   addRemarks,
   checkValue,
   deleteRemark,
-  deleteAll
+  deleteAll,
+  getOneLeadByLeadsNo
 };
