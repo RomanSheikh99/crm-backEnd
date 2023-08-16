@@ -1,13 +1,15 @@
 const Leads = require("../models/leads.model")
 
 const filterLeads = async (req, res) => {
+  const pageSize = parseInt(req.query.pageModel?.pageSize); 
+  const page = parseInt(req.query.pageModel?.page); 
   const {
     country,
     minor,
     status,
     category,
     possibility,
-  } = req.query;
+  } = req.query.params;
   let filter = {};
   filter.trash = false;
 
@@ -28,8 +30,10 @@ const filterLeads = async (req, res) => {
     filter.possibility = possibility;
   }
   try {
-    const leads = await Leads.find(filter);
-    res.status(200).json(leads.reverse());
+    const totalCount = await Leads.countDocuments(filter);
+    const skipCount = page  * pageSize;
+    const leads = await Leads.find(filter).skip(skipCount).limit(pageSize);
+    res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
   }

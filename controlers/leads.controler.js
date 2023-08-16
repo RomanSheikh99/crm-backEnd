@@ -76,9 +76,13 @@ const allLeads = async (req, res) => {
 };
 
 const getAllLeads = async (req, res) => {
+  const pageSize = parseInt(req.query.pageModel?.pageSize); 
+  const page = parseInt(req.query.pageModel?.page); 
   try {
-    const leads = await Leads.find({trash: false});
-    res.status(200).json(leads.reverse());
+    const totalCount = await Leads.countDocuments({trash: false});
+    const skipCount = page  * pageSize;
+    const leads = await Leads.find({trash: false}).skip(skipCount).limit(pageSize);
+    res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -86,9 +90,13 @@ const getAllLeads = async (req, res) => {
 
 
 const getTrashLeads = async (req, res) => {
+  const pageSize = parseInt(req.query.pageModel?.pageSize); 
+  const page = parseInt(req.query.pageModel?.page); 
   try {
-    const leads = await Leads.find({trash: true});
-    res.status(200).json(leads.reverse());
+     const totalCount = await Leads.countDocuments({trash: true});
+    const skipCount = page  * pageSize;
+    const leads = await Leads.find({trash: true}).skip(skipCount).limit(pageSize);
+    res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -96,9 +104,13 @@ const getTrashLeads = async (req, res) => {
 
 
 const getFreshLeads = async (req, res) => {
+  const pageSize = parseInt(req.query.pageModel?.pageSize); 
+  const page = parseInt(req.query.pageModel?.page); 
   try {
-    const leads = await Leads.find({trash: false , followerID: null, assignToID: null});
-    res.status(200).json(leads.reverse());
+     const totalCount = await Leads.countDocuments({trash: false , followerID: null, assignToID: null});
+    const skipCount = page  * pageSize;
+    const leads = await Leads.find({trash: false , followerID: null, assignToID: null}).skip(skipCount).limit(pageSize);
+    res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -106,9 +118,13 @@ const getFreshLeads = async (req, res) => {
 
 
 const getFolloUpLeads = async (req, res) => {
+  const pageSize = parseInt(req.query.pageModel?.pageSize); 
+  const page = parseInt(req.query.pageModel?.page); 
   try {
-    const leads = await Leads.find({trash: false , followerID: req.params.id});
-    res.status(200).json(leads.reverse());
+     const totalCount = await Leads.countDocuments({trash: false , followerID: req.params.id});
+    const skipCount = page  * pageSize;
+    const leads = await Leads.find({trash: false , followerID: req.params.id}).skip(skipCount).limit(pageSize);
+    res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -116,18 +132,26 @@ const getFolloUpLeads = async (req, res) => {
 
 
 const getAssignToLeads = async (req, res) => {
+  const pageSize = parseInt(req.query.pageModel?.pageSize); 
+  const page = parseInt(req.query.pageModel?.page); 
   try {
-    const leads = await Leads.find({trash: false , assignToID: req.params.id});
-    res.status(200).json(leads.reverse());
+     const totalCount = await Leads.countDocuments({trash: false , assignToID: req.params.id});
+    const skipCount = page  * pageSize;
+    const leads = await Leads.find({trash: false , assignToID: req.params.id}).skip(skipCount).limit(pageSize);
+    res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
   }
 };
 
 const getFavLeads = async (req, res) => {
+  const pageSize = parseInt(req.query.pageModel?.pageSize); 
+  const page = parseInt(req.query.pageModel?.page); 
   try {
-    const leads = await Leads.find({trash: false , favOf: req.params.id});
-    res.status(200).json(leads.reverse());
+    const totalCount = await Leads.countDocuments({trash: false , favOf: req.params.id});
+    const skipCount = page  * pageSize;
+    const leads = await Leads.find({trash: false , favOf: req.params.id}).skip(skipCount).limit(pageSize);
+    res.status(200).json({ data: leads, totalCount: totalCount});
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -136,7 +160,7 @@ const getFavLeads = async (req, res) => {
 const getOneLead = async (req, res) => {
   try {
     const lead = await Leads.findOne({
-      id: req.params.id
+      leadsNo: req.params.id
     });
     res.status(200).json(lead);
   } catch (error) {
