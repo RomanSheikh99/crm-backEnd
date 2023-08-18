@@ -51,15 +51,13 @@ const deleteAll = async (req, res) => {
 
 const createNewLead = async (req, res) => {
   try {
-    const count = await Leads.countDocuments();
+    const lastLead = await Leads.findOne().sort({ _id: -1 });
+    let SL = lastLead ? Number(lastLead.leadsNo) : 0;
     const data = req.body;
     data.id = uuidv4();
-    data.leadsNo = count + 1;
+    data.leadsNo = SL + 1;
     const newLead = new Leads(data)
-    await newLead.save({
-      ordered: true,
-      position: 0
-    });
+    await newLead.save();
     res.status(200).json(newLead);
   } catch (error) {
     res.status(500).json({
@@ -189,6 +187,7 @@ const updateLead = async (req, res) => {
     lead.email = req.body.email;
     lead.phone = req.body.phone;
     lead.designation = req.body.designation;
+    lead.description = req.body.description;
     lead.contactParson = req.body.contactParson;
     lead.category = req.body.category;
     lead.country = req.body.country;
@@ -348,11 +347,15 @@ const checkValue = async (req, res) => {
   const {path,value} = req.query;
   const filter = {}
 
-  if(path == 'company'){
-    filter.company = value;
-  }
+
   if(path == 'website'){
-    filter.website = value;
+    const urlPattern = /^(http|https):\/\/([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.[a-z]{2,6}(\:[0-9]+)?(\/.*)?$/;
+    if(urlPattern.test(value)){
+      const domain = new URL(value).hostname.replace(/^www\./, '');
+      filter.website = domain;
+    }else{
+      filter.website = value;
+    }
   }
   if(path == 'phone'){
     filter.phone = value;

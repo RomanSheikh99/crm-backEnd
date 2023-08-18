@@ -107,9 +107,11 @@ const setTarget = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const followLeads = await Leads.find({followerID: req.params.id})
-    if(followLeads){
-      followLeads.map(lead=>{
+    const followLeads = await Leads.find({
+      followerID: req.params.id
+    })
+    if (followLeads) {
+      followLeads.map(lead => {
         lead.followerName = null;
         lead.followerID = null;
         lead.save();
@@ -150,54 +152,51 @@ const addRecords = async (req, res) => {
       id: followerId
     });
     const quarter = user.quarter.find((q) => q.title == quarterTitle)
-    if(quarter?.title){
+    if (quarter?.title) {
       quarter.target = user.quarterlyTarget
       quarter.bit.push({
         status: status,
         possibility: possibility,
       })
-    }
-    else if(!quarter) {
+    } else if (!quarter) {
       user.quarter.push({
         title: quarterTitle,
         target: user.quarterlyTarget,
-        bit:[{
+        bit: [{
           status: status,
           possibility: possibility,
         }]
       })
     }
     const month = user.month.find((m) => m.title == monthTitle)
-    if(month?.title){
+    if (month?.title) {
       month.target = user.monthlyTarget
       month.bit.push({
         status: status,
         possibility: possibility,
       })
-    }
-    else if(!month) {
+    } else if (!month) {
       user.month.push({
         title: monthTitle,
         target: user.monthlyTarget,
-        bit:[{
+        bit: [{
           status: status,
           possibility: possibility,
         }]
       })
     }
     const daily = user.daily.find((day) => day.title == dailyTitle)
-    if(daily?.title){
+    if (daily?.title) {
       daily.callTarget = user.dailyCallTarget
       daily.bit.push({
         status: status,
         possibility: possibility,
       })
-    }
-    else if(!daily) {
+    } else if (!daily) {
       user.daily.push({
         title: dailyTitle,
         target: user.dailyCallTarget,
-        bit:[{
+        bit: [{
           status: status,
           possibility: possibility,
         }]
@@ -218,13 +217,25 @@ const addLoginUpdate = async (req, res) => {
   const date = new Date();
   const dailyTitle = moment(date).format("DD MMM YYYY");
   try {
-    const user = await User.findOne({ id: id});
-   
-    const daily = user.daily.find((day) => day.title == dailyTitle)
-    if(daily?.title){
-      daily.lastUpdate = moment(date).format('hh:mm A');
+    const user = await User.findOne({
+      id: id
+    });
+
+    if (user.daily.length) {
+
+      for(let i = 0; i < user.daily.length -1; i++){
+        if(user.daily[i].title == user.daily[i+1].title){
+          const newDays = user.daily.filter(day=> day._id != user.daily[i+1]._id)
+          user.daily = newDays;
+          user.save()
+        }
+      }
     }
-    else if(!daily) {
+
+    const daily = user.daily.find((day) => day.title == dailyTitle)
+    if (daily?.title) {
+      daily.lastUpdate = moment(date).format('hh:mm A');
+    } else if (!daily) {
       user.daily.push({
         title: dailyTitle,
         target: user.dailyCallTarget,
