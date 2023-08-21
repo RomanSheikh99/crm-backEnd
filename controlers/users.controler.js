@@ -213,8 +213,10 @@ const addRecords = async (req, res) => {
 };
 
 const addLoginUpdate = async (req, res) => {
+  console.log(req.body.localTime);
   const id = req.params.id;
-  const date = new Date();
+  const date = new Date(req.body.localTime);
+  console.log("localtime : ", moment(req.body.localTime).format('hh:mm A'))
   const dailyTitle = moment(date).format("DD MMM YYYY");
   try {
     const user = await User.findOne({
@@ -247,6 +249,7 @@ const addLoginUpdate = async (req, res) => {
     await user.save();
     res.status(200).json(user);
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       error: 'An error occurred'
     });
