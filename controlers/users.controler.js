@@ -144,9 +144,9 @@ const addRecords = async (req, res) => {
     possibility,
     followerId
   } = req.body;
-  const quarterTitle = calculateYearQuarter(moment().startOf('day'));
-  const monthTitle = moment().format('MMM YYYY');
-  const dailyTitle = moment().format("DD MMM YYYY");
+  const quarterTitle = calculateYearQuarter(moment().tz("Asia/Dhaka").startOf('day'));
+  const monthTitle = moment().tz("Asia/Dhaka").format('MMM YYYY');
+  const dailyTitle = moment().tz("Asia/Dhaka").format("DD MMM YYYY");
   try {
     const user = await User.findOne({
       id: followerId
@@ -214,9 +214,9 @@ const addRecords = async (req, res) => {
 
 const addLoginUpdate = async (req, res) => {
   const id = req.params.id;
-  const date =  moment().tz("Asia/Dhaka");
+  const date = new Date();
 
-  const dailyTitle = moment(date).format("DD MMM YYYY");
+  const dailyTitle = moment(date).tz("Asia/Dhaka").format("DD MMM YYYY");
   try {
     const user = await User.findOne({
       id: id
@@ -235,13 +235,13 @@ const addLoginUpdate = async (req, res) => {
 
     const daily = user.daily.find((day) => day.title == dailyTitle)
     if (daily?.title) {
-      daily.lastUpdate = moment(date).format('hh:mm A');
+      daily.lastUpdate = moment(date).tz("Asia/Dhaka").format('hh:mm A');
     } else if (!daily) {
       user.daily.push({
         title: dailyTitle,
         target: user.dailyCallTarget,
-        firstLogin: moment(date).format('hh:mm A'),
-        lastUpdate: moment(date).format('hh:mm A'),
+        firstLogin: moment(date).tz("Asia/Dhaka").format('hh:mm A'),
+        lastUpdate: moment(date).tz("Asia/Dhaka").format('hh:mm A'),
       })
     }
 
