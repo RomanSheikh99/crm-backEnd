@@ -82,8 +82,13 @@ const getAllLeads = async (req, res) => {
   try {
     const totalCount = await Leads.countDocuments({trash: false});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: false}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
-    res.status(200).json({ data: leads, totalCount: totalCount});
+    let leads = await Leads.find({trash: false}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
+    if(leads.length < 1){
+      leads = await Leads.find({trash: false}).sort( { _id: -1 } ).skip(0).limit(pageSize);
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }else{
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -96,8 +101,13 @@ const getTrashLeads = async (req, res) => {
   try {
      const totalCount = await Leads.countDocuments({trash: true});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: true}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
-    res.status(200).json({ data: leads, totalCount: totalCount});
+    let leads = await Leads.find({trash: true}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
+    if(leads.length < 1){
+      leads = await Leads.find({trash: true}).sort( { _id: -1 } ).skip(0).limit(pageSize);
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }else{
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -110,8 +120,13 @@ const getFreshLeads = async (req, res) => {
   try {
      const totalCount = await Leads.countDocuments({trash: false , followerID: null, assignToID: null});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: false , followerID: null, assignToID: null}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
-    res.status(200).json({ data: leads, totalCount: totalCount});
+    let leads = await Leads.find({trash: false , followerID: null, assignToID: null}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
+    if(leads.length < 1){
+      leads = await Leads.find({trash: false , followerID: null, assignToID: null}).sort( { _id: -1 } ).skip(0).limit(pageSize);
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }else{
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -124,8 +139,14 @@ const getFolloUpLeads = async (req, res) => {
   try {
      const totalCount = await Leads.countDocuments({trash: false , followerID: req.params.id});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: false , followerID: req.params.id}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
-    res.status(200).json({ data: leads, totalCount: totalCount});
+    let leads = await Leads.find({trash: false , followerID: req.params.id}).sort( { nextFollowUP: 1 } ).skip(skipCount).limit(pageSize);
+    if(leads.length < 1){
+      leads = await Leads.find({trash: false , followerID: req.params.id}).sort( { nextFollowUP: 1 } ).skip(0).limit(pageSize);
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }else{
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }
+    
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -138,8 +159,13 @@ const getAssignToLeads = async (req, res) => {
   try {
      const totalCount = await Leads.countDocuments({trash: false , assignToID: req.params.id});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: false , assignToID: req.params.id}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
-    res.status(200).json({ data: leads, totalCount: totalCount});
+    let leads = await Leads.find({trash: false , assignToID: req.params.id}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
+    if(leads.length < 1){
+      leads = await Leads.find({trash: false , assignToID: req.params.id}).sort( { _id: -1 } ).skip(0).limit(pageSize);
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }else{
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -151,8 +177,13 @@ const getFavLeads = async (req, res) => {
   try {
     const totalCount = await Leads.countDocuments({trash: false , favOf: req.params.id});
     const skipCount = page  * pageSize;
-    const leads = await Leads.find({trash: false , favOf: req.params.id}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
-    res.status(200).json({ data: leads, totalCount: totalCount});
+    let leads = await Leads.find({trash: false , favOf: req.params.id}).sort( { _id: -1 } ).skip(skipCount).limit(pageSize);
+    if(leads.length < 1){
+      leads = await Leads.find({trash: false , favOf: req.params.id}).sort( { _id: -1 } ).skip(0).limit(pageSize);
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }else{
+      res.status(200).json({ data: leads, totalCount: totalCount});
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -274,9 +305,11 @@ const setNextFollowUp = async (req, res) => {
     const lead = await Leads.findOne({
       id: req.params.id
     });
+    const totalCount = await Leads.countDocuments({trash: false, nextFollowUP: req.body.nfup, followerID: req.body.user});
+    console.log(req.body.nfup, req.body.user, totalCount)
     lead.nextFollowUP = req.body.nfup;
     await lead.save();
-    res.status(200).json(lead);
+    res.status(200).json({ lead, totalCount});
   } catch (error) {
     res.status(500).send(error.message);
   }

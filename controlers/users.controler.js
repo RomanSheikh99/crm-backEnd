@@ -236,6 +236,7 @@ const addLoginUpdate = async (req, res) => {
     const daily = user.daily.find((day) => day.title == dailyTitle)
     if (daily?.title) {
       daily.lastUpdate = moment(date).tz("Asia/Dhaka").format('hh:mm A');
+      daily.target = user.dailyCallTarget
     } else if (!daily) {
       user.daily.push({
         title: dailyTitle,
