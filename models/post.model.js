@@ -1,7 +1,7 @@
 const { default: mongoose } = require("mongoose");
 
 
-const postSchema = mongoose.Schema({
+const blogSchema = mongoose.Schema({
     id: {
         type: String,
         require: true
@@ -23,4 +23,4 @@ const postSchema = mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('posts', postSchema);
+module.exports = mongoose.model('Blog', blogSchema);

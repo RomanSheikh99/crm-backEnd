@@ -6,12 +6,14 @@ const app = express();
 
 const userRouter = require('./routes/users.route');
 const leadRouter = require('./routes/leads.route');
+const blogRouter = require('./routes/blogs.route');
 
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
+app.use('/api/blogs', blogRouter)
 app.use('/api/users', userRouter)
 app.use('/api/leads', leadRouter)
 
