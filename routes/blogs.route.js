@@ -2,14 +2,25 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { v4: uuidv4 } = require('uuid');
+const {
+    v4: uuidv4
+} = require('uuid');
+
 
 const blogs = express();
 
-const { postBlog, getBlogs, getOneBlog, updateBlog, deleteBlog } = require('../controlers/posts.controler');
+const {
+    postBlog,
+    getBlogs,
+    getOneBlog,
+    updateBlog,
+    deleteBlog
+} = require('../controlers/posts.controler');
 
 
-blogs.use(bodyParser.urlencoded({extended: true}));
+blogs.use(bodyParser.urlencoded({
+    extended: true
+}));
 blogs.use(express.static(path.resolve(__dirname, "public")));
 
 const storage = multer.diskStorage({
@@ -19,7 +30,7 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         const filename = `${uuidv4()}${path.extname(file.originalname)}`;
         cb(null, filename);
-      },
+    },
 })
 
 const upload = multer({

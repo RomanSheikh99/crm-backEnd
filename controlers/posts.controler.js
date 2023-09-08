@@ -2,25 +2,40 @@ const {
   v4: uuidv4
 } = require('uuid')
 const Blog = require("../models/post.model")
+const {
+  v2: cloudinary
+} = require('cloudinary');
+
+cloudinary.config({
+  cloud_name: "djw2aim6l",
+  api_key: '352614133974756',
+  api_secret: "B-nYz62cwntphAih6WG-vVSGSqE"
+});
 
 
 const postBlog = async (req, res) => {
   try {
-    const { title, blog } = req.body;
-    const imageUrl = req.file ? `/blogImages/${req.file.filename}` : null;
+    const {
+      title,
+      blog
+    } = req.body;
+    const imageUrl = req.file ? req.file.filename : null;
+    const result = await cloudinary.uploader.upload(`public/blogImages/${imageUrl}`, {public_id: "blog"})
 
     const newBlog = new Blog({
       id: uuidv4(),
       title,
       blog,
-      image: imageUrl,
+      image: result.secure_url,
     });
 
     await newBlog.save();
-
     res.status(200).json(newBlog);
   } catch (error) {
-    res.status(500).json({ message: 'An error occurred' });
+    console.log(error)
+    res.status(500).json({
+      message: 'An error occurred'
+    });
   }
 };
 
@@ -72,8 +87,6 @@ const deleteBlog = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-
-
 
 module.exports = {
   postBlog,
