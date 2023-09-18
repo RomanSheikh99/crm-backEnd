@@ -306,7 +306,6 @@ const setNextFollowUp = async (req, res) => {
       id: req.params.id
     });
     const totalCount = await Leads.countDocuments({trash: false, nextFollowUP: req.body.nfup, followerID: req.body.user});
-    console.log(req.body.nfup, req.body.user, totalCount)
     lead.nextFollowUP = req.body.nfup;
     await lead.save();
     res.status(200).json({ lead, totalCount});
@@ -316,6 +315,10 @@ const setNextFollowUp = async (req, res) => {
 };
 
 const setFollower = async (req, res) => {
+  
+console.log('before setfollowers')
+
+  console.log("call", req.body)
   try {
     const lead = await Leads.findOne({
       id: req.params.id
@@ -325,6 +328,7 @@ const setFollower = async (req, res) => {
     await lead.save();
     res.status(200).json(lead);
   } catch (error) {
+    console.log("error : ", error)
     res.status(500).send(error.message);
   }
 };

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 
 const leads = express();
 
+
 const searchRouter = require('./search.route');
 const filterRouter = require('./filter.route');
 
@@ -75,8 +76,8 @@ leads.get('/assignLeads/:id', getAssignToLeads)
 leads.get('/favLeads/:id', getFavLeads)
 
 leads.get('/:id', getOneLead)
+
 leads.get('/getOneLeadByLeadsNo/:id', getOneLeadByLeadsNo)
-leads.patch('/:id', updateLead)
 leads.delete('/:id', deleteLead)
 leads.delete('/delete/allLeads', deleteAll)
 leads.patch('/addToTrash/:id', addToTrashLead)
@@ -84,10 +85,12 @@ leads.patch('/assignTo/:id', assignTo)
 leads.patch('/setStatus/:id', setStatus)
 leads.patch('/setPosibility/:id', setPosibility)
 leads.patch('/setNextFollowUp/:id', setNextFollowUp)
+
 leads.patch('/setFollower/:id', setFollower)
 leads.patch('/setFavOf/:id', setFavOf)
 leads.patch('/addRemarks/:id', addRemarks)
 leads.patch('/deleteRemark/:id', deleteRemark)
+leads.patch('/:id', updateLead)
 
 
 module.exports = leads;
