@@ -8,10 +8,6 @@ const leads = express();
 const searchRouter = require("./search.route");
 const filterRouter = require("./filter.route");
 
-const searchRouter = require('./search.route');
-const filterRouter = require('./filter.route');
-
-
 const {
   createNewLead,
   importLeads,

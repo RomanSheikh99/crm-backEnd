@@ -32,7 +32,6 @@ const postBlog = async (req, res) => {
     await newBlog.save();
     res.status(200).json(newBlog);
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       message: 'An error occurred'
     });

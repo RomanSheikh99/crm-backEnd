@@ -6,24 +6,22 @@ const PORT = dev.app.port;
 const http = require("http").Server(app);
 const socketIO = require("socket.io")(http, {
   cors: {
-    origin: "http://127.0.0.1:5173",
+    origin: "http://localhost:5173",
   },
 });
 
 //Add this before the app.get() block
 socketIO.on("connection", (socket) => {
-  console.log(`⚡: ${socket.id} user just connected!`);
   socket.on("message", async (data) => {
     const lead = await Leads.findOne({
       id: data.id,
     });
-    console.log(lead);
     lead.followerID = data.user_id;
     lead.followerName = data.name;
     await lead.save();
+    socket.emit("lead", lead);
   });
   socket.on("disconnect", () => {
-    console.log("🔥: A user disconnected");
   });
 });
 

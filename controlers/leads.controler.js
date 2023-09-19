@@ -244,7 +244,6 @@ const getOneLeadByLeadsNo = async (req, res) => {
   }
 };
 const getOneLead = async (req, res) => {
-  console.log(req.params.id);
   try {
     const lead = await Leads.findOne({
       id: req.params.id,
@@ -354,9 +353,6 @@ const setNextFollowUp = async (req, res) => {
       nextFollowUP: req.body.nfup,
       followerID: req.body.user,
     });
-    console.log(req.body.nfup, req.body.user, totalCount);
-
-    const totalCount = await Leads.countDocuments({trash: false, nextFollowUP: req.body.nfup, followerID: req.body.user});
 
     lead.nextFollowUP = req.body.nfup;
     await lead.save();

@@ -17,13 +17,6 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 
-
-app.use((req, res, next) => {
-    console.log("Got here from app js");
-    next();
-})
-
-
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -45,12 +38,10 @@ app.use((req, res, next) => {
     })
 })
 
-
 app.use((err, req, res, next) => {
     res.status(500).json({
         massage: "Server Not Found!"
     })
 })
-
 
 module.exports = app;
