@@ -355,6 +355,9 @@ const setNextFollowUp = async (req, res) => {
       followerID: req.body.user,
     });
     console.log(req.body.nfup, req.body.user, totalCount);
+
+    const totalCount = await Leads.countDocuments({trash: false, nextFollowUP: req.body.nfup, followerID: req.body.user});
+
     lead.nextFollowUP = req.body.nfup;
     await lead.save();
     res.status(200).json({ lead, totalCount });
@@ -364,12 +367,10 @@ const setNextFollowUp = async (req, res) => {
 };
 
 const setFollower = async (req, res) => {
-  console.log("inside req body", req.body);
   try {
     const lead = await Leads.findOne({
       id: req.params.id,
     });
-    console.log(lead);
     lead.followerID = req.body.id;
     lead.followerName = req.body.name;
     await lead.save();
