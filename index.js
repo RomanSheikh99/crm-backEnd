@@ -6,7 +6,7 @@ const PORT = dev.app.port;
 const http = require("http").Server(app);
 const socketIO = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "*",
   },
 });
 
